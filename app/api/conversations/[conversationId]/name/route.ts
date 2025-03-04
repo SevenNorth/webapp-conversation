@@ -9,9 +9,10 @@ export async function POST(request: NextRequest, { params }: {
   const {
     auto_generate,
     name,
+    user: userId,
   } = body
   const { conversationId } = params
-  const { user } = getInfo(request)
+  const { user } = getInfo(request, userId)
 
   // auto generate name
   const { data } = await client.renameConversation(conversationId, name, user, auto_generate)
