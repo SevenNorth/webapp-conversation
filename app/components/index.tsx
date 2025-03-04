@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
+import { useSearchParams } from 'next/navigation'
 import useConversation from '@/hooks/use-conversation'
 import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
@@ -49,10 +50,24 @@ const Main: FC<IMainProps> = () => {
     transfer_methods: [TransferMethod.local_file],
   })
 
+  const [user, setUser] = useState('')
+
   useEffect(() => {
     if (APP_INFO?.title)
-      document.title = `${APP_INFO.title} - Powered by Dify`
+      document.title = `${APP_INFO.title}`
   }, [APP_INFO?.title])
+
+  // 从searchParams获取user
+  const searchParams = useSearchParams()
+  useEffect(() => {
+    const user = searchParams.get('userId') || ''
+    setUser(user)
+    localStorage.setItem('user', user)
+    return () => {
+      setUser('')
+      localStorage.setItem('user', '')
+    }
+  }, [])
 
   // onData change thought (the produce obj). https://github.com/immerjs/immer/issues/576
   useEffect(() => {
@@ -92,6 +107,12 @@ const Main: FC<IMainProps> = () => {
     // parse variables in introduction
     setChatList(generateNewChatListWithOpenStatement('', inputs))
   }
+
+  useEffect(() => {
+    // 默认直接开始对话
+    handleStartChat({})
+  }, [])
+
   const hasSetInputs = (() => {
     if (!isNewConversation)
       return true
