@@ -23,7 +23,7 @@
 
   // Main function to embed the chatbot
   async function embedChatbot() {
-    if (!config || !config.token) {
+    if (!config) {
       console.error(`${configKey} is empty or token is not provided`);
       return;
     }
