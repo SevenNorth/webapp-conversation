@@ -1,7 +1,8 @@
 import type { FC } from 'react'
 import classNames from 'classnames'
-import style from './style.module.css'
+import panda from '../icons/panda.png'
 
+import style from './style.module.css'
 export type AppIconProps = {
   size?: 'xs' | 'tiny' | 'small' | 'medium' | 'large'
   rounded?: boolean
@@ -17,7 +18,7 @@ const AppIcon: FC<AppIconProps> = ({
   className,
 }) => {
   return (
-    <span
+    <div
       className={classNames(
         style.appIcon,
         size !== 'medium' && style[size],
@@ -28,8 +29,8 @@ const AppIcon: FC<AppIconProps> = ({
         background,
       }}
     >
-      🤖
-    </span>
+      <img src={panda.src} alt="" className='rounded-2xl' />
+    </div>
   )
 }
 

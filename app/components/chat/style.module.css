@@ -1,6 +1,8 @@
 .answerIcon {
   position: relative;
-  background: url(./icons/robot.svg);
+  background: url(./icons/panda.png);
+  background-size: cover;
+  border-radius: 50%;
 }
 
 .typeingIcon {
@@ -60,7 +62,7 @@
   height: 0;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-left: 8px solid #16A34A;
+  border-left: 8px solid #22c55e;
 }
 
 .textArea {
