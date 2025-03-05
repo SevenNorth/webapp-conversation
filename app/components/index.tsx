@@ -256,6 +256,7 @@ const Main: FC<IMainProps> = () => {
         }
         const _conversationId = getConversationIdFromStorage(APP_ID)
         const isNotNewConversation = conversations.some(item => item.id === _conversationId)
+        setConversationIdChangeBecauseOfNew(!isNotNewConversation)
 
         // fetch new conversation info
         const { user_input_form, opening_statement: introduction, file_upload, system_parameters }: any = appParams
