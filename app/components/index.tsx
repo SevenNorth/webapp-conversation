@@ -9,7 +9,6 @@ import { useSearchParams } from 'next/navigation'
 import useConversation from '@/hooks/use-conversation'
 import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
-import ConfigSence from '@/app/components/config-scence'
 import Header from '@/app/components/header'
 import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
 import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
@@ -650,8 +649,8 @@ const Main: FC<IMainProps> = () => {
       />
       <div className="flex bg-gray-200 overflow-hidden">
         {/* sidebar */}
-        {!isMobile && renderSidebar()}
-        {isMobile && isShowSidebar && (
+        {/* {!isMobile && renderSidebar()} */}
+        {/* {isMobile && isShowSidebar && (
           <div className='fixed inset-0 z-50'
             style={{ backgroundColor: 'rgba(35, 56, 118, 0.2)' }}
             onClick={hideSidebar}
@@ -660,10 +659,10 @@ const Main: FC<IMainProps> = () => {
               {renderSidebar()}
             </div>
           </div>
-        )}
+        )} */}
         {/* main */}
-        <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
-          <ConfigSence
+        <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto pt-4'>
+          {/* <ConfigSence
             conversationName={conversationName}
             hasSetInputs={hasSetInputs}
             isPublicVersion={isShowPrompt}
@@ -673,7 +672,7 @@ const Main: FC<IMainProps> = () => {
             canEditInputs={canEditInputs}
             savedInputs={currInputs as Record<string, any>}
             onInputsChange={setCurrInputs}
-          ></ConfigSence>
+          ></ConfigSence> */}
 
           {
             hasSetInputs && (
