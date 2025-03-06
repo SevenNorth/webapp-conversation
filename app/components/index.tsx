@@ -57,7 +57,7 @@ const Main: FC<IMainProps> = () => {
   // 从searchParams获取user
   const searchParams = useSearchParams()
   useEffect(() => {
-    const user = searchParams.get('userId') || ''
+    const user = searchParams.get('user') || ''
     localStorage.setItem('user', user)
     return () => {
       localStorage.setItem('user', '')
@@ -106,7 +106,7 @@ const Main: FC<IMainProps> = () => {
   useEffect(() => {
     const inputs: Record<string, string> = {}
     searchParams.forEach((v, k) => {
-      if (k !== 'userId')
+      if (k !== 'user')
         inputs[k] = v
     })
     localStorage.setItem('inputs', JSON.stringify(inputs))
@@ -218,19 +218,20 @@ const Main: FC<IMainProps> = () => {
     }))
   }
 
+  const [appParams, setAppParams] = useState<any>()
   // sometime introduction is not applied to state
   const generateNewChatListWithOpenStatement = (introduction?: string, inputs?: Record<string, any> | null) => {
     let calculatedIntroduction = introduction || conversationIntroduction || ''
     const calculatedPromptVariables = inputs || currInputs || null
     if (calculatedIntroduction && calculatedPromptVariables)
       calculatedIntroduction = replaceVarWithValues(calculatedIntroduction, promptConfig?.prompt_variables || [], calculatedPromptVariables)
-
     const openStatement = {
       id: `${Date.now()}`,
       content: calculatedIntroduction,
       isAnswer: true,
       feedbackDisabled: true,
       isOpeningStatement: isShowPrompt,
+      suggestedQuestions: appParams?.suggested_questions || [],
     }
     if (calculatedIntroduction)
       return [openStatement]
@@ -247,7 +248,7 @@ const Main: FC<IMainProps> = () => {
     (async () => {
       try {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
-
+        setAppParams(appParams)
         // handle current conversation id
         const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
         if (error) {

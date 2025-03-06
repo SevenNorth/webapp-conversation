@@ -8,9 +8,8 @@ import type { FeedbackFunc } from '../type'
 import s from '../style.module.css'
 import ImageGallery from '../../base/image-gallery'
 import Thought from '../thought'
-import { randomString } from '@/utils/string'
+import SuggestedQuestions from './suggested-questions'
 import type { ChatItem, MessageRating, VisionFile } from '@/types/app'
-import Tooltip from '@/app/components/base/tooltip'
 import { Markdown } from '@/app/components/base/markdown'
 import type { Emoji } from '@/types/tools'
 
@@ -59,6 +58,7 @@ type IAnswerProps = {
   onFeedback?: FeedbackFunc
   isResponding?: boolean
   allToolIcons?: Record<string, string | Emoji>
+  onSend?: (message: string, files: VisionFile[]) => void
 }
 
 // The component needs to maintain its own state to control whether to display input component
@@ -68,8 +68,9 @@ const Answer: FC<IAnswerProps> = ({
   onFeedback,
   isResponding,
   allToolIcons,
+  onSend,
 }) => {
-  const { id, content, feedback, agent_thoughts } = item
+  const { id, content, feedback, agent_thoughts, isOpeningStatement } = item
   const isAgentMode = !!agent_thoughts && agent_thoughts.length > 0
 
   const { t } = useTranslation()
@@ -89,22 +90,17 @@ const Answer: FC<IAnswerProps> = ({
     const ratingIconClassname = isLike ? 'text-primary-600 bg-primary-100 hover:bg-primary-200' : 'text-red-600 bg-red-100 hover:bg-red-200'
     // The tooltip is always displayed, but the content is different for different scenarios.
     return (
-      <Tooltip
-        selector={`user-feedback-${randomString(16)}`}
-        content={isLike ? '取消赞同' : '取消反对'}
+      <div
+        className={'relative box-border flex items-center justify-center h-7 w-7 p-0.5 rounded-lg bg-white cursor-pointer text-gray-500 hover:text-gray-800'}
+        style={{ boxShadow: '0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.05)' }}
+        onClick={async () => {
+          await onFeedback?.(id, { rating: null })
+        }}
       >
-        <div
-          className={'relative box-border flex items-center justify-center h-7 w-7 p-0.5 rounded-lg bg-white cursor-pointer text-gray-500 hover:text-gray-800'}
-          style={{ boxShadow: '0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.05)' }}
-          onClick={async () => {
-            await onFeedback?.(id, { rating: null })
-          }}
-        >
-          <div className={`${ratingIconClassname} rounded-lg h-6 w-6 flex items-center justify-center`}>
-            <RatingIcon isLike={isLike} />
-          </div>
+        <div className={`${ratingIconClassname} rounded-lg h-6 w-6 flex items-center justify-center`}>
+          <RatingIcon isLike={isLike} />
         </div>
-      </Tooltip>
+      </div>
     )
   }
 
@@ -116,13 +112,9 @@ const Answer: FC<IAnswerProps> = ({
     const userOperation = () => {
       return feedback?.rating
         ? null
-        : <div className='flex gap-1'>
-          <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.like') as string}>
-            {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={true} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'like' }) })}
-          </Tooltip>
-          <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.dislike') as string}>
-            {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={false} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'dislike' }) })}
-          </Tooltip>
+        : <div className='flex gap-1 items-center'>
+          {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={true} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'like' }) })}
+          {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={false} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'dislike' }) })}
         </div>
     }
 
@@ -186,14 +178,27 @@ const Answer: FC<IAnswerProps> = ({
                 : (isAgentMode
                   ? agentModeAnswer
                   : (
-                    <Markdown content={content} />
+                    <Markdown content={content || '&nbsp;'} />
                   ))}
+              <SuggestedQuestions item={item} onSend={onSend} />
+              {
+                !isOpeningStatement && !isResponding
+                && <div className='flex mt-2'>
+                  <div className='warning text-gray-400 text-xs mt-1 border-t pt-2 mr-2 w-full'>
+                    结果由AI生成，信息仅供参考。详情请前往医院就诊！
+                  </div>
+                </div>
+              }
             </div>
-            <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
-              {!feedbackDisabled && !item.feedbackDisabled && renderItemOperation()}
-              {/* User feedback must be displayed */}
-              {!feedbackDisabled && renderFeedbackRating(feedback?.rating)}
-            </div>
+            {
+              !isOpeningStatement && !isResponding
+              && <div className='flex flex-row justify-end gap-1 items-center mt-2'>
+                {renderItemOperation()}
+                {/* User feedback must be displayed */}
+                {renderFeedbackRating(feedback?.rating)}
+              </div>
+            }
+
           </div>
         </div>
       </div>

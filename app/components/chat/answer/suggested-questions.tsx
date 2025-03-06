@@ -1,0 +1,36 @@
+import type { FC } from 'react'
+import { memo } from 'react'
+import type { ChatItem, VisionFile } from '@/types/app'
+
+type SuggestedQuestionsProps = {
+  item: ChatItem
+  onSend?: (message: string, files: VisionFile[]) => void
+}
+const SuggestedQuestions: FC<SuggestedQuestionsProps> = ({
+  item,
+  onSend,
+}) => {
+  const {
+    isOpeningStatement,
+    suggestedQuestions,
+  } = item
+
+  if (!isOpeningStatement || !suggestedQuestions?.length)
+    return null
+
+  return (
+    <div className='flex flex-wrap'>
+      {suggestedQuestions.filter(q => !!q && q.trim()).map((question, index) => (
+        <div
+          key={index}
+          className='mt-1 mr-1 max-w-full last:mr-0 shrink-0 py-[5px] leading-[18px] items-center px-4 rounded-lg border border-gray-200 shadow-xs bg-white text-xs font-medium text-primary-600 cursor-pointer'
+          onClick={() => onSend?.(question, [])}
+        >
+          {question}
+        </div>),
+      )}
+    </div>
+  )
+}
+
+export default memo(SuggestedQuestions)

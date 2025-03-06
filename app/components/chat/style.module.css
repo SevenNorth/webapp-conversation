@@ -47,7 +47,7 @@
 }
 
 .answerWrap .itemOperation {
-  display: none;
+  display: flex;
 }
 
 .answerWrap:hover .itemOperation {
