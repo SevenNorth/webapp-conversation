@@ -1,8 +1,7 @@
 'use client'
-import classNames from 'classnames'
 import type { FC } from 'react'
 import React from 'react'
-import { Tooltip as ReactTooltip } from 'react-tooltip' // fixed version to 5.8.3 https://github.com/ReactTooltip/react-tooltip/issues/972
+// fixed version to 5.8.3 https://github.com/ReactTooltip/react-tooltip/issues/972
 import 'react-tooltip/dist/react-tooltip.css'
 
 type TooltipProps = {
@@ -30,7 +29,7 @@ const Tooltip: FC<TooltipProps> = ({
         'data-tooltip-id': selector,
       })
       }
-      <ReactTooltip
+      {/* <ReactTooltip
         id={selector}
         content={content}
         className={classNames('!bg-white !text-xs !font-normal !text-gray-700 !shadow-lg !opacity-100', className)}
@@ -38,7 +37,7 @@ const Tooltip: FC<TooltipProps> = ({
         clickable={clickable}
       >
         {htmlContent && htmlContent}
-      </ReactTooltip>
+      </ReactTooltip> */}
     </div>
   )
 }
