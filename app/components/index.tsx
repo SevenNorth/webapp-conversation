@@ -49,8 +49,6 @@ const Main: FC<IMainProps> = () => {
     transfer_methods: [TransferMethod.local_file],
   })
 
-  const [user, setUser] = useState('')
-
   useEffect(() => {
     if (APP_INFO?.title)
       document.title = `${APP_INFO.title}`
@@ -60,10 +58,8 @@ const Main: FC<IMainProps> = () => {
   const searchParams = useSearchParams()
   useEffect(() => {
     const user = searchParams.get('userId') || ''
-    setUser(user)
     localStorage.setItem('user', user)
     return () => {
-      setUser('')
       localStorage.setItem('user', '')
     }
   }, [])
@@ -108,8 +104,14 @@ const Main: FC<IMainProps> = () => {
   }
 
   useEffect(() => {
+    const inputs: Record<string, string> = {}
+    searchParams.forEach((v, k) => {
+      if (k !== 'userId')
+        inputs[k] = v
+    })
+    localStorage.setItem('inputs', JSON.stringify(inputs))
     // 默认直接开始对话
-    handleStartChat({})
+    handleStartChat(inputs)
   }, [])
 
   const hasSetInputs = (() => {

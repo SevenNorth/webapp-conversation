@@ -8,9 +8,9 @@
 
 (function () {
   // Constants for DOM element IDs and configuration key
-  const configKey = "difyChatbotConfig";
-  const buttonId = "dify-chatbot-bubble-button";
-  const iframeId = "dify-chatbot-bubble-window";
+  const configKey = "ChatbotConfig";
+  const buttonId = "chatbot-bubble-button";
+  const iframeId = "chatbot-bubble-window";
   const config = window[configKey];
 
   // SVG icons for open and close states
@@ -33,8 +33,19 @@
     const baseUrl =
       config.baseUrl || `https://${config.isDev ? "dev." : ""}udify.app`;
 
+    function getCompressedInputsFromConfig() {
+      const inputs = config?.inputs || {};
+      const compressedInputs = [];
+      Object.entries(inputs).map(async ([key, value]) => {
+        compressedInputs.push(`${key}=${value}`)
+      })
+      return compressedInputs.join('&');
+    }
+
+    const inputsParams = getCompressedInputsFromConfig()
+
     // pre-check the length of the URL
-    const iframeUrl = `${baseUrl}/?${params}`;
+    const iframeUrl = `${baseUrl}/?${params}&${inputsParams}`;
     if (iframeUrl.length > 2048) {
       console.error("The URL is too long, please reduce the number of inputs to prevent the bot from failing to load");
     }
