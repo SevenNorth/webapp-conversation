@@ -29,7 +29,7 @@ const Header: FC<IHeaderProps> = ({
           </div>
         )
         : <div></div>}
-      <div></div>
+
       <div className='flex items-center space-x-2'>
         <AppIcon size="small" />
         <div className=" text-sm text-gray-800 font-bold">{title}</div>
@@ -42,7 +42,7 @@ const Header: FC<IHeaderProps> = ({
             <PencilSquareIcon className="h-4 w-4 text-gray-500" />
           </div>)
         : <div></div>}
-      <div></div>
+
     </div>
   )
 }

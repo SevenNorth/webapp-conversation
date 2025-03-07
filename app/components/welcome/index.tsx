@@ -297,11 +297,7 @@ const Welcome: FC<IWelcomeProps> = ({
       return null
 
     return (
-      <div
-        className='pt-[88px] mb-5'
-      >
-        {isPublicVersion ? renderHasSetInputsPublic() : renderHasSetInputsPrivate()}
-      </div>)
+     null)
   }
 
   return (
