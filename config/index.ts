@@ -18,3 +18,11 @@ export const API_PREFIX = '/api'
 export const LOCALE_COOKIE_NAME = 'locale'
 
 export const DEFAULT_VALUE_MAX_LEN = 48
+
+// 显示模式切换
+export const APP_SHOW_MODE_SWITCH = true
+export const APP_INPUT_PARAMS_MODE_KEY = 'ms'
+export const APP_MODE_OPTIONS = [
+  { label: '健康咨询', value: 'consultation' },
+  { label: '智能导诊', value: 'guide' },
+]

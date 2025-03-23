@@ -1,6 +1,6 @@
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Textarea from 'rc-textarea'
@@ -15,6 +15,8 @@ import Toast from '@/app/components/base/toast'
 import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-uploader'
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
+import { APP_INPUT_PARAMS_MODE_KEY, APP_MODE_OPTIONS, APP_SHOW_MODE_SWITCH } from '@/config'
+import useConversation from '@/hooks/use-conversation'
 
 export type IChatProps = {
   chatList: ChatItem[]
@@ -47,6 +49,14 @@ const Chat: FC<IChatProps> = ({
   controlClearQuery,
   visionConfig,
 }) => {
+  /*
+  * conversation info
+  */
+  const {
+    currInputs,
+    setCurrInputs,
+  } = useConversation()
+
   const { t } = useTranslation()
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
@@ -117,6 +127,20 @@ const Chat: FC<IChatProps> = ({
     }
   }
 
+  const [currentMode, setCurrentMode] = useState<string>()
+  useEffect(() => {
+    const mode = currInputs?.[APP_INPUT_PARAMS_MODE_KEY] || APP_MODE_OPTIONS?.[0].value
+    setCurrentMode(mode)
+  }, [currInputs])
+
+  const handleSwitchMode = (mode: string) => {
+    const inputs = currInputs || JSON.parse(localStorage.getItem('inputs') || '{}')
+    inputs[APP_INPUT_PARAMS_MODE_KEY] = mode
+    localStorage.setItem('inputs', JSON.stringify(inputs))
+    setCurrInputs(inputs)
+    setCurrentMode(mode)
+  }
+
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List */}
@@ -147,6 +171,32 @@ const Chat: FC<IChatProps> = ({
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
+            {
+              APP_SHOW_MODE_SWITCH && (<div className='h-10 p-[5.5px] absolute z-10 left-0 right-0 bottom-12 overflow-x-auto flex items-center'>
+                {
+                  (APP_MODE_OPTIONS || []).map((opt) => {
+                    return (
+                      <div
+                        className={cn(
+                          'mr-2',
+                          'border',
+                          'border-dashed',
+                          'pl-3',
+                          'pr-3',
+                          'rounded-2xl',
+                          {
+                            'text-blue-600 border-blue-600 bg-blue-200': currentMode === opt.value,
+                            'text-gray-800 border-gray-500 bg-gray-300': currentMode !== opt.value,
+                          },
+                        )}
+                        key={opt.value}
+                        onClick={() => handleSwitchMode(opt.value)}
+                      >{opt.label}</div>
+                    )
+                  })
+                }
+              </div>)
+            }
             <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
               {
                 visionConfig?.enabled && (
