@@ -23,6 +23,6 @@ export const DEFAULT_VALUE_MAX_LEN = 48
 export const APP_SHOW_MODE_SWITCH = true
 export const APP_INPUT_PARAMS_MODE_KEY = 'ms'
 export const APP_MODE_OPTIONS = [
-  { label: '健康咨询', value: 'consultation' },
-  { label: '智能导诊', value: 'guide' },
+  { label: '健康咨询', value: 'consultation', desc: 'AAA' },
+  { label: '智能导诊', value: 'guide', desc: 'BBB' },
 ]

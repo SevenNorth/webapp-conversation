@@ -650,6 +650,19 @@ const Main: FC<IMainProps> = () => {
     notify({ type: 'success', message: t('common.api.success') })
   }
 
+  const handleModeSwtich = (modeOption: { desc: string }) => {
+    const placeholderAnswerId = `answer-placeholder-${Date.now()}`
+    const placeholderAnswerItem = {
+      id: placeholderAnswerId,
+      content: modeOption.desc,
+      isAnswer: true,
+      isOpeningStatement: true,
+    }
+
+    const newList = [...getChatList(), placeholderAnswerItem]
+    setChatList(newList)
+  }
+
   const renderSidebar = () => {
     if (!APP_ID || !APP_INFO || !promptConfig)
       return null
@@ -724,6 +737,7 @@ const Main: FC<IMainProps> = () => {
                     isResponding={isResponding}
                     checkCanSend={checkCanSend}
                     visionConfig={visionConfig}
+                    onModeSwtich={handleModeSwtich}
                   />
                 </div>
               </div>)

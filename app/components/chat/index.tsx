@@ -35,6 +35,7 @@ export type IChatProps = {
   isResponding?: boolean
   controlClearQuery?: number
   visionConfig?: VisionSettings
+  onModeSwtich?: (opt: { desc: string }) => void
 }
 
 const Chat: FC<IChatProps> = ({
@@ -48,6 +49,7 @@ const Chat: FC<IChatProps> = ({
   isResponding,
   controlClearQuery,
   visionConfig,
+  onModeSwtich,
 }) => {
   /*
   * conversation info
@@ -133,12 +135,13 @@ const Chat: FC<IChatProps> = ({
     setCurrentMode(mode)
   }, [currInputs])
 
-  const handleSwitchMode = (mode: string) => {
+  const handleSwitchMode = (mode: string, opt: { desc: string }) => {
     const inputs = currInputs || JSON.parse(localStorage.getItem('inputs') || '{}')
     inputs[APP_INPUT_PARAMS_MODE_KEY] = mode
     localStorage.setItem('inputs', JSON.stringify(inputs))
     setCurrInputs(inputs)
     setCurrentMode(mode)
+    onModeSwtich?.(opt)
   }
 
   return (
@@ -190,7 +193,7 @@ const Chat: FC<IChatProps> = ({
                           },
                         )}
                         key={opt.value}
-                        onClick={() => handleSwitchMode(opt.value)}
+                        onClick={() => handleSwitchMode(opt.value, opt)}
                       >{opt.label}</div>
                     )
                   })
@@ -250,7 +253,7 @@ const Chat: FC<IChatProps> = ({
           </div>
         )
       }
-    </div>
+    </div >
   )
 }
 
