@@ -24,7 +24,7 @@ import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
-import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
+import useBreakpoints from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
 import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
 import AppUnavailable from '@/app/components/app-unavailable'
@@ -39,7 +39,8 @@ export type IMainProps = {
 const Main: FC<IMainProps> = () => {
   const { t } = useTranslation()
   const media = useBreakpoints()
-  const isMobile = media === MediaType.mobile
+  // const isMobile = media === MediaType.mobile
+  const isMobile = true
   const hasSetAppConfig = APP_ID && API_KEY
 
   /*
