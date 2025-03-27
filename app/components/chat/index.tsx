@@ -193,7 +193,7 @@ const Chat: FC<IChatProps> = ({
                           },
                         )}
                         key={opt.value}
-                        onClick={() => handleSwitchMode(opt.value, opt)}
+                        onClick={() => !isResponding && handleSwitchMode(opt.value, opt)}
                       >{opt.label}</div>
                     )
                   })
