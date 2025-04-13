@@ -220,3 +220,11 @@ export enum CodeLanguage {
   javascript = 'javascript',
   json = 'json',
 }
+export type IModeOpts = {
+  label: string // 模式名称
+  value: string // 模式值
+  pushBotMsg?: boolean // 是否自动添加一条机器人消息
+  botMsg?: string // 机器人消息内容
+  pushQuery?: boolean // 是否自动发起一次对话提问
+  queryMsg?: string // 提问信息
+}

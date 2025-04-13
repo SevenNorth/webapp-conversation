@@ -20,7 +20,7 @@ import {
   sendChatMessage,
   updateFeedback,
 } from '@/service'
-import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
+import type { ChatItem, ConversationItem, Feedbacktype, IModeOpts, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
@@ -650,11 +650,14 @@ const Main: FC<IMainProps> = () => {
     notify({ type: 'success', message: t('common.api.success') })
   }
 
-  const handleModeSwtich = (modeOption: { desc: string }) => {
+  const handleModeSwtich = (modeOption: IModeOpts) => {
+    if (!modeOption.pushBotMsg || !modeOption.botMsg)
+      return
+
     const placeholderAnswerId = `answer-placeholder-${Date.now()}`
     const placeholderAnswerItem = {
       id: placeholderAnswerId,
-      content: modeOption.desc,
+      content: modeOption.botMsg,
       isAnswer: true,
       isOpeningStatement: true,
     }

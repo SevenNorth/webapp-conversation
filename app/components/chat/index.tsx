@@ -8,7 +8,7 @@ import s from './style.module.css'
 import Answer from './answer'
 import Question from './question'
 import type { FeedbackFunc } from './type'
-import type { ChatItem, VisionFile, VisionSettings } from '@/types/app'
+import type { ChatItem, IModeOpts, VisionFile, VisionSettings } from '@/types/app'
 import { TransferMethod } from '@/types/app'
 import Tooltip from '@/app/components/base/tooltip'
 import Toast from '@/app/components/base/toast'
@@ -35,7 +35,7 @@ export type IChatProps = {
   isResponding?: boolean
   controlClearQuery?: number
   visionConfig?: VisionSettings
-  onModeSwtich?: (opt: { desc: string }) => void
+  onModeSwtich?: (opt: IModeOpts) => void
 }
 
 const Chat: FC<IChatProps> = ({
@@ -135,13 +135,15 @@ const Chat: FC<IChatProps> = ({
     setCurrentMode(mode)
   }, [currInputs])
 
-  const handleSwitchMode = (mode: string, opt: { desc: string }) => {
+  const handleSwitchMode = (mode: string, opt: IModeOpts) => {
     const inputs = currInputs || JSON.parse(localStorage.getItem('inputs') || '{}')
     inputs[APP_INPUT_PARAMS_MODE_KEY] = mode
     localStorage.setItem('inputs', JSON.stringify(inputs))
     setCurrInputs(inputs)
     setCurrentMode(mode)
     onModeSwtich?.(opt)
+    if (opt.pushQuery && opt.queryMsg)
+      onSend(opt.queryMsg, [])
   }
 
   return (
@@ -247,7 +249,7 @@ const Chat: FC<IChatProps> = ({
                     </div>
                   }
                 >
-                  <div className={`${(!valid() || (checkCanSend && !checkCanSend())) ? s.sendBtn : s.sendBtnActive} w-8 h-8 cursor-pointer rounded-md`} onClick={handleSend}></div>
+                  <div className={`${(!(query && query.trim() !== '') || (checkCanSend && !checkCanSend())) ? s.sendBtn : s.sendBtnActive} w-8 h-8 cursor-pointer rounded-md`} onClick={handleSend}></div>
                 </Tooltip>
               </div>
             </div>
