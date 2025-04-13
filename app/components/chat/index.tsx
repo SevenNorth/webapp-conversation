@@ -187,6 +187,7 @@ const Chat: FC<IChatProps> = ({
                           'pl-3',
                           'pr-3',
                           'rounded-2xl',
+                          'text-nowrap',
                           {
                             'text-blue-600 border-blue-600 bg-blue-200': currentMode === opt.value,
                             'text-gray-800 border-gray-500 bg-gray-300': currentMode !== opt.value,
