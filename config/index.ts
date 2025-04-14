@@ -26,4 +26,8 @@ export const APP_MODE_OPTIONS: IModeOpts[] = [
   { label: '健康咨询', value: 'consultation', pushBotMsg: true, botMsg: 'AAA' },
   { label: '智能导诊', value: '智能导诊', pushBotMsg: true, botMsg: 'BBB' },
   { label: '就诊小结', value: 'summary', pushBotMsg: false, botMsg: 'summary', pushQuery: true, queryMsg: '查询就诊小结' },
+  { label: '阳光政策解读', value: '阳光政策解读', pushBotMsg: true, botMsg: 'summary' },
 ]
+
+// 是否显示引用
+export const APP_SHOW_CITATION = true

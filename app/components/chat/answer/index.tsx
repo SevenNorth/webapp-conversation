@@ -12,6 +12,8 @@ import SuggestedQuestions from './suggested-questions'
 import type { ChatItem, MessageRating, VisionFile } from '@/types/app'
 import { Markdown } from '@/app/components/base/markdown'
 import type { Emoji } from '@/types/tools'
+import Citation from '@/app/components/chat/citation'
+import { APP_SHOW_CITATION } from '@/config'
 
 const OperationBtn = ({ innerContent, onClick, className }: { innerContent: React.ReactNode; onClick?: () => void; className?: string }) => (
   <div
@@ -70,7 +72,7 @@ const Answer: FC<IAnswerProps> = ({
   allToolIcons,
   onSend,
 }) => {
-  const { id, content, feedback, agent_thoughts, isOpeningStatement } = item
+  const { id, content, feedback, agent_thoughts, isOpeningStatement, citation } = item
   const isAgentMode = !!agent_thoughts && agent_thoughts.length > 0
 
   const { t } = useTranslation()
@@ -166,7 +168,7 @@ const Answer: FC<IAnswerProps> = ({
             </div>
           }
         </div>
-        <div className={`${s.answerWrap}`}>
+        <div className={`${s.answerWrap} chat-answer-container`}>
           <div className={`${s.answer} relative text-sm text-gray-900`}>
             <div className={'ml-2 py-3 px-4 bg-white rounded-lg'}>
               {(isResponding && (isAgentMode ? (!content && (agent_thoughts || []).filter(item => !!item.thought || !!item.tool).length === 0) : !content))
@@ -181,6 +183,11 @@ const Answer: FC<IAnswerProps> = ({
                     <Markdown content={content || '&nbsp;'} />
                   ))}
               <SuggestedQuestions item={item} onSend={onSend} />
+              {
+                APP_SHOW_CITATION && !!citation?.length && !isResponding && (
+                  <Citation data={citation || []} showHitInfo={false} />
+                )
+              }
               {
                 !isOpeningStatement && !isResponding
                 && <div className='flex mt-2'>
